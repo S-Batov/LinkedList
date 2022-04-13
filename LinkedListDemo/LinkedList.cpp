@@ -1,13 +1,6 @@
 #include "LinkedList.h"
 #include <assert.h>
 
-/*
-LinkedList::Node::Node() {
-	data = 0;
-	next = nullptr;
-}
-*/
-
 LinkedList::Node::Node(int dataVal){
 	data = dataVal;
 	next = nullptr;
@@ -23,15 +16,15 @@ int LinkedList::length() const
 	return len;
 }
 
+bool LinkedList::isEmpty() const
+{
+	return (head == nullptr) ? true : false;
+}
+
 void LinkedList::addFront(int dataVal)
 {
 	len++;
 	Node* newNode = new Node(dataVal);
-
-	if (head == nullptr) {
-		head = newNode;
-		return;
-	}
 	newNode->next = head;
 	head = newNode;
 }
@@ -50,13 +43,11 @@ void LinkedList::addBack(int dataVal) {
 		curr = curr->next;
 	}
 	curr->next = newNode;
-	newNode->data = dataVal;
-	newNode->next = nullptr;
 }
 
 void LinkedList::addAt(int index, int dataVal)
 {
-	assert(index < len && index >= 0);
+	assert(index <= len && index >= 0);
 	len++;
 	Node* newNode = new Node(dataVal);
 
@@ -93,25 +84,24 @@ void LinkedList::dropTail()
 void LinkedList::deleteAt(int index)
 {
 	assert(index < len && index >= 0);
-	Node* temp = head;
+	Node* curr = head;
+	Node* prev = nullptr;
 	if (index == 0) {
 		head = head->next;
-		delete temp;
+		delete curr;
 		len--;
 		return;
 	}
 	int counter = 0;
-	while (counter < index - 1) {
-		temp = temp->next;
+	while (counter < index) {
+		prev = curr;
+		curr = curr->next;
 		counter++;
 	}
-	Node* old = temp;
-	temp = temp->next;
-	Node* newNext = temp->next;
-	delete temp;
-	old->next = newNext;
+	Node* newNext = curr->next;
+	delete curr;
+	prev->next = newNext;
 	len--;
-	return;
 }
 
 void LinkedList::deleteFromTo(int index1, int index2)
@@ -138,10 +128,9 @@ void LinkedList::deleteFromTo(int index1, int index2)
 			len--;
 			counter++;
 		}
-		this->head = curr;
+		head = curr;
 		return;
 	}
-
 	while (counter < index1){
 		prev = curr;
 		curr = curr->next;
@@ -162,9 +151,47 @@ void LinkedList::deleteLength(int index, int len_)
 {
 	assert(index < len && index >= 0);
 	assert(len_ > 0);
-	assert(index + len_ < len);
+	assert(index + len_ <= len);
+
+	Node* curr = head;
+	Node* prev = nullptr;
+	int counter = 0;
+	if (index == 0) {
+		while (counter < len_) {
+			prev = curr;
+			curr = curr->next;
+			head = curr;
+			delete prev;
+			counter++;
+			len--;
+		}
+		return;
+	}
+	while (counter < index) {
+		prev = curr;
+		curr = curr->next;
+		counter++;
+	}
+	Node* end = prev;
+	counter = 0;
+	while (counter < len_) {
+		prev = curr;
+		curr = curr->next;
+		delete prev;
+		counter++;
+		len--;
+	}
+	end->next = curr;
 }
 
 void LinkedList::deleteAll()
 {
+	Node* curr = head;
+	Node* prev = nullptr;
+	while (curr != nullptr) {
+		prev = curr;
+		curr = curr->next;
+		delete prev;
+		len--;
+	}
 }

@@ -4,7 +4,6 @@ class LinkedList {
 public:
 	class Node {
 	public:
-		//Node();
 		Node(int dataVal);
 		int data;
 		Node* next;
@@ -13,6 +12,7 @@ public:
 	LinkedList();
 
 	int length() const;
+	bool isEmpty() const;
 
 	void addFront(int dataVal);
 	void addBack(int dataVal);
@@ -31,6 +31,9 @@ private:
 };
 
 /*
+--length() const
+--isEmpty() const
+
 --addToFront(int value)
 --addToBack(int value)
 --insertAt(int index, int value)
@@ -39,8 +42,8 @@ private:
 --dropTail()
 --deleteAt(int index)
 --deleteFromTo(int index1, int index2)
-deleteLength(int index, int len_)
-deleteAll()
+--deleteLength(int index, int len_)
+--deleteAll()
 
 isInList(int value)
 find value(int value)

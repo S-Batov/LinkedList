@@ -13,7 +13,15 @@ public:
 
 	int length() const;
 	bool isEmpty() const;
-
+	bool isInList(int val) const;
+	int countRepetitions(int value) const;
+	int getMinValue() const;
+	int getMaxValue() const;
+	int getValueAt(int index) const;
+	int getIndexOfMin() const;
+	int getIndeOfMax() const;
+	int getIndexOf(int value) const;
+	
 	void addFront(int dataVal);
 	void addBack(int dataVal);
 	void addAt(int index, int dataVal);
@@ -31,27 +39,6 @@ private:
 };
 
 /*
---length() const
---isEmpty() const
-
---addToFront(int value)
---addToBack(int value)
---insertAt(int index, int value)
-
---dropHead()
---dropTail()
---deleteAt(int index)
---deleteFromTo(int index1, int index2)
---deleteLength(int index, int len_)
---deleteAll()
-
-isInList(int value)
-find value(int value)
-find max()
-find min()
-valueAt(int index)
-countRepetitions(int value)
-
 sortMinMax()
 sortMaxMin()
 

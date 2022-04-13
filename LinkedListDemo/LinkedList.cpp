@@ -21,6 +21,122 @@ bool LinkedList::isEmpty() const
 	return (head == nullptr) ? true : false;
 }
 
+bool LinkedList::isInList(int val) const
+{
+	assert(head != nullptr);
+	int dataVal = head->data;
+	Node* curr = head;
+	while (curr != nullptr) {
+		if (curr->data == val)
+			return true;
+		curr = curr->next;
+	}
+	return false;
+}
+
+int LinkedList::countRepetitions(int value) const
+{
+	assert(head != nullptr);
+	int reps = 0;
+	Node* curr = head;
+	while (curr != nullptr) {
+		if (curr->data == value)
+			reps++;
+		curr = curr->next;
+	}
+	return reps;
+}
+
+int LinkedList::getMinValue() const
+{
+	assert(head != nullptr);
+	Node* curr = head;
+	int min = curr->data;
+	while (curr != nullptr) {
+		if (curr->data < min)
+			min = curr->data;
+		curr = curr->next;
+	}
+	return min;
+}
+
+int LinkedList::getMaxValue() const
+{
+	assert(head != nullptr);
+	Node* curr = head;
+	int max = curr->data;
+	while (curr != nullptr) {
+		if (curr->data > max)
+			max = curr->data;
+		curr = curr->next;
+	}
+	return max;
+}
+
+int LinkedList::getValueAt(int index) const
+{
+	assert(head != nullptr);
+	assert(index >= 0 && index < len);
+	int counter = 0;
+	Node* curr = head;
+	while (counter < index) {
+		curr = curr->next;
+		counter++;
+	}
+	return curr->data;
+}
+
+int LinkedList::getIndexOfMin() const
+{
+	assert(head != nullptr);
+	Node* curr = head;
+	int index = 0;
+	int counter = 0;
+	int min = head->data;
+	while (curr != nullptr) {
+		if (curr->data < min) {
+			min = curr->data;
+			index = counter;
+		}
+		curr = curr->next;
+		counter++;
+	}
+	return index;
+}
+
+int LinkedList::getIndeOfMax() const
+{
+	assert(head != nullptr);
+	Node* curr = head;
+	int index = 0;
+	int counter = 0;
+	int max = head->data;
+	while (curr != nullptr) {
+		if (curr->data > max) {
+			max = curr->data;
+			index = counter;
+		}
+		curr = curr->next;
+		counter++;
+	}
+	return index;
+}
+
+int LinkedList::getIndexOf(int value) const
+{
+	assert(head != nullptr);
+	Node* curr = head;
+	int index = 0;
+	while (curr != nullptr) {
+		if (curr->data == value) {
+			return index;
+		}
+		curr = curr->next;
+		index++;
+	}
+	return -1;
+}
+
 void LinkedList::addFront(int dataVal)
 {
 	len++;

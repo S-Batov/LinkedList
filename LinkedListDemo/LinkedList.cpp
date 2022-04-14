@@ -311,3 +311,104 @@ void LinkedList::deleteAll()
 		len--;
 	}
 }
+
+void LinkedList::swapNodes(int index1, int index2)
+{
+	assert(head != nullptr);
+	assert(index1 >= 0 && index1 < len);
+	assert(index2 >= 0 && index2 < len);
+
+	if (index1 == index2) {
+		return;
+	}
+
+	if (index1 > index2) {
+		int temp = index1;
+		index1 = index2;
+		index2 = temp;
+	}
+
+	int counter = 0;
+	Node* curr = head;
+	Node* prev = nullptr;
+	while (counter < index1) {
+		prev = curr;
+		curr = curr->next;
+		counter++;
+	}
+	Node* n1 = curr;
+	Node* n1p = prev;
+
+	while (counter < index2) {
+		prev = curr;
+		curr = curr->next;
+		counter++;
+	}
+	Node* n2 = curr;
+	Node* n2p = prev;
+
+	if (n1p != nullptr) {
+		n1p->next = n2;
+	}
+	else {
+		head = n2;
+	}
+	n2p->next = n1;
+	Node* temp = n2->next;
+	n2->next = n1->next;
+	n1->next = temp;
+}
+
+void LinkedList::reverse()
+{
+	assert(head != nullptr);
+	Node* curr = head;
+	Node* prev = nullptr;
+	Node* temp = nullptr;
+	while (curr != nullptr) {
+		temp = curr->next;
+		curr->next = prev;
+		prev = curr;
+		curr = temp;
+	}
+	head = prev;
+}
+
+void LinkedList::sort()
+{
+	//https://www.educative.io/edpresso/how-to-sort-a-linked-list-using-merge-sort
+	assert(head != nullptr);
+
+}
+
+void LinkedList::removeDuplicates()
+{
+}
+
+void LinkedList::removeValue(int value)
+{
+	assert(head != nullptr);
+	Node* curr = head;
+	Node* prev = nullptr;
+	while (curr != nullptr) {
+		if (curr->data == value) {
+			if (prev == nullptr) {
+				head = head->next;
+				delete curr;
+				curr = head;
+			}
+			else {
+				Node* newNext = curr->next;
+				prev->next = curr->next;
+				delete curr;
+				curr = newNext;
+			}
+			len--;
+		}
+		else {
+			prev = curr;
+			curr = curr->next;
+		}
+	}
+}
+

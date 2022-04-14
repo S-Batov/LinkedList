@@ -33,17 +33,20 @@ public:
 	void deleteLength(int index, int len);
 	void deleteAll();
 
+	void swapNodes(int index1, int index2);
+	void reverse();
+	void sort();
+	void removeDuplicates();
+	void removeValue(int value);
+
+	void appendList(LinkedList* lst);
+	LinkedList* getSublist(int index1, int index2);
+
+private:
+	void splitList(Node* source, Node** front, Node** back);
+	void mergeLists(LinkedList* l1, LinkedList* l2);
+
 private:
 	Node* head;
 	int len;
 };
-
-/*
-sortMinMax()
-sortMaxMin()
-
-swapNodes(int index1, int index2)
-
-appendList(LinkedList lst)
-getSublist(int index1, int index2)
-*/

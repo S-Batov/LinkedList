@@ -11,8 +11,12 @@ int main()
 	test.addBack(3);
 	test.addBack(4);
 	test.addBack(5);
+	test.addBack(4);
+	test.addBack(5);
 
-	
+	LinkedList test2 = test.createSubList(0, 5);
+
+	test.removeDuplicates();
 
 	bool b = test.isInList(0);
 

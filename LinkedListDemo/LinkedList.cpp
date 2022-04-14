@@ -1,5 +1,6 @@
 #include "LinkedList.h"
 #include <assert.h>
+#include <vector>
 
 LinkedList::Node::Node(int dataVal){
 	data = dataVal;
@@ -220,15 +221,15 @@ void LinkedList::deleteAt(int index)
 	len--;
 }
 
-void LinkedList::deleteFromTo(int index1, int index2)
+void LinkedList::deleteFromTo(int fromIndex, int toIndex)
 {
-	assert(index1 < len && index1 >= 0);
-	assert(index2 < len && index2 >= 0);
-	assert(index1 != index2);
-	if (index1 > index2) {
-		int temp = index1;
-		index1 = index2;
-		index2 = temp;
+	assert(fromIndex < len && fromIndex >= 0);
+	assert(toIndex < len && toIndex >= 0);
+	assert(fromIndex != toIndex);
+	if (fromIndex > toIndex) {
+		int temp = fromIndex;
+		fromIndex = toIndex;
+		toIndex = temp;
 	}
 
 	int counter = 0;
@@ -236,8 +237,8 @@ void LinkedList::deleteFromTo(int index1, int index2)
 	Node* prev = nullptr;
 	Node* end = nullptr;
 
-	if (index1 == 0) {
-		while (counter <= index2) {
+	if (fromIndex == 0) {
+		while (counter <= toIndex) {
 			prev = curr;
 			curr = curr->next;
 			delete prev;
@@ -247,13 +248,13 @@ void LinkedList::deleteFromTo(int index1, int index2)
 		head = curr;
 		return;
 	}
-	while (counter < index1){
+	while (counter < fromIndex){
 		prev = curr;
 		curr = curr->next;
 		counter++;
 	}
 	end = prev;
-	while (counter <= index2) {
+	while (counter <= toIndex) {
 		prev = curr;
 		curr = curr->next;
 		delete prev;
@@ -312,26 +313,26 @@ void LinkedList::deleteAll()
 	}
 }
 
-void LinkedList::swapNodes(int index1, int index2)
+void LinkedList::swapNodes(int fromIndex, int toIndex)
 {
 	assert(head != nullptr);
-	assert(index1 >= 0 && index1 < len);
-	assert(index2 >= 0 && index2 < len);
+	assert(fromIndex >= 0 && fromIndex < len);
+	assert(toIndex >= 0 && toIndex < len);
 
-	if (index1 == index2) {
+	if (fromIndex == toIndex) {
 		return;
 	}
 
-	if (index1 > index2) {
-		int temp = index1;
-		index1 = index2;
-		index2 = temp;
+	if (fromIndex > toIndex) {
+		int temp = fromIndex;
+		fromIndex = toIndex;
+		toIndex = temp;
 	}
 
 	int counter = 0;
 	Node* curr = head;
 	Node* prev = nullptr;
-	while (counter < index1) {
+	while (counter < fromIndex) {
 		prev = curr;
 		curr = curr->next;
 		counter++;
@@ -339,7 +340,7 @@ void LinkedList::swapNodes(int index1, int index2)
 	Node* n1 = curr;
 	Node* n1p = prev;
 
-	while (counter < index2) {
+	while (counter < toIndex) {
 		prev = curr;
 		curr = curr->next;
 		counter++;
@@ -378,11 +379,30 @@ void LinkedList::sort()
 {
 	//https://www.educative.io/edpresso/how-to-sort-a-linked-list-using-merge-sort
 	assert(head != nullptr);
+	mergeSort(&head);
 
 }
 
 void LinkedList::removeDuplicates()
 {
+	assert(head != nullptr);
+	std::vector<int> values;
+	Node* curr = head;
+	Node* prev = nullptr;
+	while (curr != nullptr) {
+		if ( isDup(curr->data, values) ) {
+			Node* temp = curr->next;
+			delete curr;
+			curr = temp;
+			prev->next = curr;
+			len--;
+		}
+		else {
+			values.push_back(curr->data);
+			prev = curr;
+			curr = curr->next;
+		}	
+	}
 }
 
 void LinkedList::removeValue(int value)
@@ -412,3 +432,207 @@ void LinkedList::removeValue(int value)
 	}
 }
 
+void LinkedList::appendList(LinkedList lst)
+{
+	Node* curr = this->head;
+	while (curr->next != nullptr) {
+		curr = curr->next;
+	}
+	curr->next = lst.head;
+	len += lst.len;
+}
+
+void LinkedList::addValuesFrom(LinkedList lst)
+{
+	assert(this->head != nullptr);
+	assert(lst.head != nullptr);
+	Node* curr = lst.head;
+	while (curr != nullptr) {
+		this->addBack(curr->data);
+		curr = curr->next;
+	}
+}
+
+void LinkedList::addValuesFrom(LinkedList lst, int toIndex)
+{
+	assert(this->head != nullptr);
+	assert(lst.head != nullptr);
+	assert(toIndex >= 0 && toIndex < lst.len);
+
+	int counter = 0;
+	Node* curr = lst.head;
+	while (curr != nullptr && counter <= toIndex) {
+		this->addBack(curr->data);
+		curr = curr->next;
+		counter++;
+	}
+}
+
+void LinkedList::addValuesFrom(LinkedList lst, int fromIndex, int toIndex)
+{
+	assert(this->head != nullptr);
+	assert(lst.head != nullptr);
+	assert(fromIndex >= 0 && fromIndex < lst.len);
+	assert(toIndex >= 0 && toIndex < lst.len);
+	assert(fromIndex < toIndex);
+
+	int counter = 0;
+	Node* curr = lst.head;
+	while (curr != nullptr && counter <= toIndex) {
+		if (counter >= fromIndex) {
+			this->addBack(curr->data);
+		}
+		curr = curr->next;
+		counter++;
+	}
+}
+
+LinkedList LinkedList::createSubList(int fromIndex, int toIndex)
+{
+	assert(head != nullptr);
+	assert(fromIndex >= 0 && fromIndex < len);
+	assert(toIndex >= 0 && toIndex < len);
+	assert(toIndex > fromIndex);
+
+	LinkedList* newLst = new LinkedList;
+
+	Node* curr = this->head;
+	int counter = 0;
+
+	while (counter < fromIndex) {
+		curr = curr->next;
+		counter++;
+	}
+	while (counter <= toIndex) {
+		newLst->addBack(curr->data);
+		curr = curr->next;
+		counter++;
+	}
+
+	return *newLst;
+}
+
+void LinkedList::splitList(Node* source, Node** front, Node** back)
+{
+	Node* ptr2 = source;
+	Node* ptr1 = source->next;
+	while (ptr1 != nullptr) {
+		ptr1 = ptr1->next;
+		if (ptr1 != nullptr) {
+			ptr2 = ptr2->next;
+			ptr1 = ptr1->next;
+		}
+	}
+	*front = source;
+	*back = ptr2->next;
+	ptr2->next = nullptr;
+}
+void LinkedList::mergeSort(Node** thead)
+{
+	Node* head = *thead;
+	Node* ptr1;
+	Node* ptr2;
+
+	// Base Case
+	if ((head == NULL) || (head->next == NULL)) {
+		return;
+	}
+
+	// Splitting list
+	splitList(head, &ptr1, &ptr2);
+
+	// Recursively sorting two lists.
+	mergeSort(&ptr1);
+	mergeSort(&ptr2);
+
+	// Sorted List.
+	LinkedList* temp = mergeSortedList(ptr1, ptr2);
+	*thead = temp->head;
+}
+
+LinkedList* LinkedList::mergeSortedList(Node* lst1, Node* lst2)
+{
+	return nullptr;
+}
+bool LinkedList::isDup(int value, std::vector<int> values)
+{
+	for (int i = 0; i < values.size(); i++) {
+		if (value == values[i]) {
+			return true;
+		}
+	}
+	return false;
+}
+/*
+
+// Merging two sorted lists.
+node* MergeSortedList(node* lst1, node* lst2)
+{
+	node* result = NULL;
+
+	// Base Cases
+	if (lst1 == NULL)
+		return (lst2);
+	else if (lst2 == NULL)
+		return (lst1);
+
+	// recursively merging two lists
+	if (lst1->data <= lst2->data) {
+		result = lst1;
+		result->next = MergeSortedList(lst1->next, lst2);
+	}
+	else {
+		result = lst2;
+		result->next = MergeSortedList(lst1, lst2->next);
+	}
+	return result;
+}
+
+// Splitting two into halves.
+// If the size of the list is odd, then extra element goes in the first list.
+void SplitList(node* source, node** front, node** back)
+{
+	node* ptr1;
+	node* ptr2;
+	ptr2 = source;
+	ptr1 = source->next;
+
+	// ptr1 is incrmented twice and ptr2 is icremented once.
+	while (ptr1 != NULL) {
+		ptr1 = ptr1->next;
+		if (ptr1 != NULL) {
+			ptr2 = ptr2->next;
+			ptr1 = ptr1->next;
+		}
+	}
+
+	// ptr2 is at the midpoint.
+	*front = source;
+	*back = ptr2->next;
+	ptr2->next = NULL;
+}
+
+
+// Merge Sort
+void MergeSort(node** thead)
+{
+	node* head = *thead;
+	node* ptr1;
+	node* ptr2;
+
+  // Base Case
+	if ((head == NULL) || (head->next == NULL)) {
+		return;
+	}
+
+	// Splitting list
+	SplitList(head, &ptr1, &ptr2);
+
+	// Recursively sorting two lists.
+	MergeSort(&ptr1);
+	MergeSort(&ptr2);
+
+	// Sorted List.
+	*thead = MergeSortedList(ptr1, ptr2);
+}
+*/

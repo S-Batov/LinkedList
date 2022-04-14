@@ -1,4 +1,5 @@
 #pragma once
+#include <vector>
 
 class LinkedList {	
 public:
@@ -29,7 +30,7 @@ public:
 	void dropHead();
 	void dropTail();
 	void deleteAt(int index);
-	void deleteFromTo(int index1, int index2);
+	void deleteFromTo(int fromIndex, int toIndex);
 	void deleteLength(int index, int len);
 	void deleteAll();
 
@@ -39,12 +40,18 @@ public:
 	void removeDuplicates();
 	void removeValue(int value);
 
-	void appendList(LinkedList* lst);
-	LinkedList* getSublist(int index1, int index2);
+	void appendList(LinkedList lst);
+	void addValuesFrom(LinkedList lst);
+	void addValuesFrom(LinkedList lst, int toIndex);
+	void addValuesFrom(LinkedList lst, int fromIndex, int toIndex);
+	LinkedList createSubList(int fromIndex, int toIndex);
 
 private:
 	void splitList(Node* source, Node** front, Node** back);
-	void mergeLists(LinkedList* l1, LinkedList* l2);
+	void mergeSort(Node** thead);
+	LinkedList* mergeSortedList(Node* lst1, Node* lst2);
+
+	bool isDup(int value, std::vector<int> values);
 
 private:
 	Node* head;
